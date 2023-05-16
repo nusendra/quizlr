@@ -2,8 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { Slot } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { dark1, dark2, dark4 } from "../utils/colors";
-import Constants from "expo-constants";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Image } from "react-native";
 
 export default function App() {
   return (
@@ -17,11 +16,51 @@ export default function App() {
       >
         <Slot />
         <View style={styles.footer}>
-          <Text style={styles.bottomText}>Home</Text>
-          <Text style={styles.bottomText}>Leaderboard</Text>
-          <Text style={styles.bottomText}>Activity</Text>
-          <Text style={styles.bottomText}>Bookmarks</Text>
-          <Text style={styles.bottomText}>Profile</Text>
+          <View style={styles.footerItem}>
+            <Image source={require("../assets/images/home.png")} />
+            <Text style={styles.bottomText}>Home</Text>
+          </View>
+          <View style={styles.footerItem}>
+            <Image source={require("../assets/images/compas.png")} />
+            <Text style={styles.bottomText}>Leaderboard</Text>
+          </View>
+          <View style={styles.footerItem}>
+            <Image source={require("../assets/images/timer.png")} />
+            <Text style={styles.bottomText}>Activity</Text>
+          </View>
+          <View style={styles.footerItem}>
+            <Image source={require("../assets/images/bookmark.png")} />
+            <Text style={styles.bottomText}>Bookmarks</Text>
+          </View>
+          <View style={styles.footerItem}>
+            <Image source={require("../assets/images/profile.png")} />
+            <Text style={styles.bottomText}>Profile</Text>
+          </View>
+        </View>
+        <View style={styles.rightButton}>
+          <View style={[styles.rightButtonItem, { marginBottom: 10 }]}>
+            <Image source={require("../assets/images/account-image.png")} />
+          </View>
+          <View style={styles.rightButtonItem}>
+            <Image source={require("../assets/images/Like.png")} />
+            <Text style={styles.textRightButton}>87</Text>
+          </View>
+          <View style={styles.rightButtonItem}>
+            <Image source={require("../assets/images/Comments.png")} />
+            <Text style={styles.textRightButton}>2</Text>
+          </View>
+          <View style={styles.rightButtonItem}>
+            <Image source={require("../assets/images/Share.png")} />
+            <Text style={styles.textRightButton}>17</Text>
+          </View>
+          <View style={styles.rightButtonItem}>
+            <Image source={require("../assets/images/Bookmark-white.png")} />
+            <Text style={styles.textRightButton}>203</Text>
+          </View>
+          <View style={styles.rightButtonItem}>
+            <Image source={require("../assets/images/Flip.png")} />
+            <Text style={styles.textRightButton}>Flip</Text>
+          </View>
         </View>
       </LinearGradient>
     </>
@@ -37,13 +76,31 @@ const styles = StyleSheet.create({
     backgroundColor: dark4,
     position: "absolute",
     bottom: 0,
-    height: 50,
+    height: 60,
     paddingRight: 20,
     paddingLeft: 20,
   },
   bottomText: {
-    marginTop: 15,
     color: "white",
     fontSize: 10,
+    marginTop: 7,
+  },
+  footerItem: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  rightButton: {
+    position: "absolute",
+    right: 16,
+    bottom: 110,
+  },
+  rightButtonItem: {
+    alignItems: "center",
+    marginTop: 17,
+  },
+  textRightButton: {
+    color: "white",
+    marginTop: 10,
   },
 });
