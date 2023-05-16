@@ -3,8 +3,11 @@ import { Slot } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { dark1, dark2, dark4 } from "../utils/colors";
 import { StyleSheet, View, Text, Image } from "react-native";
+import { useFollowingStore } from "../stores";
 
 export default function App() {
+  const following = useFollowingStore((state) => state.following);
+
   return (
     <>
       <StatusBar style="light" />
@@ -39,7 +42,10 @@ export default function App() {
         </View>
         <View style={styles.rightButton}>
           <View style={[styles.rightButtonItem, { marginBottom: 10 }]}>
-            <Image source={require("../assets/images/account-image.png")} />
+            <Image
+              source={{ uri: following?.user?.avatar }}
+              style={{ height: 45, width: 45 }}
+            />
           </View>
           <View style={styles.rightButtonItem}>
             <Image source={require("../assets/images/Like.png")} />
