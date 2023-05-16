@@ -16,7 +16,7 @@ import {
   yellow,
 } from "../utils/colors";
 
-export default function FollowingTab() {
+export default function FollowingTab({ data }) {
   const [showAnswer, setShowAnswer] = useState(false);
   const options = [
     {
@@ -48,10 +48,7 @@ export default function FollowingTab() {
       >
         {showAnswer ? (
           <ScrollView>
-            <Text style={styles.title}>
-              What was the name of the Act that created federal subsidies for
-              the construction of a transcontinental railroad?
-            </Text>
+            <Text style={styles.title}>{data.flashcard_front}</Text>
             <View style={styles.separator} />
             <Text style={{ color: green, fontWeight: 700 }}>Answer</Text>
             <Text
@@ -62,10 +59,7 @@ export default function FollowingTab() {
                 marginTop: 5,
               }}
             >
-              With the rapid settlement in wester territories, Congress decided
-              that an efficient railroad transport to the Pacific coast would be
-              beneficial and passed the Pacific Railway Act of 1862 during the
-              Civil War to promote easier western transportation for the North.
+              {data.flashcard_back}
             </Text>
             <View style={{ marginTop: 40 }}>
               <Text style={{ color: grey, fontSize: 14 }}>
@@ -102,10 +96,7 @@ export default function FollowingTab() {
           </ScrollView>
         ) : (
           <View>
-            <Text style={styles.title}>
-              What was the name of the Act that created federal subsidies for
-              the construction of a transcontinental railroad?
-            </Text>
+            <Text style={styles.title}>{data.flashcard_front}</Text>
           </View>
         )}
       </TouchableOpacity>

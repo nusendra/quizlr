@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { dark3, grey2 } from "../utils/colors";
 import FollowingTab from "../components/FollowingTab";
 import ForYouTab from "../components/ForYouTab";
 import Constants from "expo-constants";
+import { getFollowing } from "../api/index";
 
 export default function App() {
   const Tabs = {
@@ -11,6 +12,16 @@ export default function App() {
     FOR_YOU: "For You",
   };
   const [selectedTab, setSelectedTab] = useState(Tabs.FOLLOWING);
+  const [following, setFollowing] = useState([]);
+
+  const fetchFollowing = async () => {
+    const { data } = await getFollowing();
+    setFollowing(data);
+  };
+
+  useEffect(() => {
+    fetchFollowing();
+  }, []);
 
   return (
     <>
@@ -40,11 +51,17 @@ export default function App() {
             <Image source={require("../assets/images/search.png")} />
           </TouchableOpacity>
         </View>
-        {selectedTab === Tabs.FOLLOWING ? <FollowingTab /> : <ForYouTab />}
+        {selectedTab === Tabs.FOLLOWING ? (
+          <FollowingTab data={following} />
+        ) : (
+          <ForYouTab />
+        )}
         <View style={styles.bottomDescription}>
-          <Text style={{ color: "white", fontSize: 16 }}>AP US History</Text>
+          <Text style={{ color: "white", fontSize: 16 }}>
+            {following.user.name}
+          </Text>
           <Text style={{ color: "white", fontSize: 14 }}>
-            Topic 5.2: Manifest Destiny #apush5_1
+            {following.description}
           </Text>
         </View>
         <View style={styles.footer}>
@@ -53,9 +70,7 @@ export default function App() {
               source={require("../assets/images/play.png")}
               style={styles.play}
             />
-            <Text style={styles.footerText}>
-              Playlist - Unit 5: Period 5: 1844-1877
-            </Text>
+            <Text style={styles.footerText}>{following.playlist}</Text>
           </View>
           <Image
             source={require("../assets/images/arrow-right.png")}
