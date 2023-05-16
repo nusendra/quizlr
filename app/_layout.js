@@ -2,11 +2,18 @@ import { StatusBar } from "expo-status-bar";
 import { Slot } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { dark1, dark2, dark4 } from "../utils/colors";
-import { StyleSheet, View, Text, Image } from "react-native";
+import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import { useFollowingStore } from "../stores";
+import { shallow } from "zustand/shallow";
 
 export default function App() {
-  const following = useFollowingStore((state) => state.following);
+  const { following, setAnswer } = useFollowingStore(
+    (state) => ({
+      following: state.following,
+      setAnswer: state.setAnswer,
+    }),
+    shallow
+  );
 
   return (
     <>
@@ -63,10 +70,10 @@ export default function App() {
             <Image source={require("../assets/images/Bookmark-white.png")} />
             <Text style={styles.textRightButton}>203</Text>
           </View>
-          <View style={styles.rightButtonItem}>
+          <TouchableOpacity style={styles.rightButtonItem} onPress={setAnswer}>
             <Image source={require("../assets/images/Flip.png")} />
             <Text style={styles.textRightButton}>Flip</Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </LinearGradient>
     </>
