@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "quizlr",
+    "scheme": "quizlr",
     "slug": "quizlr",
     "version": "1.0.0",
     "orientation": "portrait",
