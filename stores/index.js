@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { getFollowing } from "../api";
+import { getFollowing, getForYou } from "../api";
 
 export const useFollowingStore = create((set) => ({
   following: {},
@@ -9,4 +9,12 @@ export const useFollowingStore = create((set) => ({
     set({ following: data });
   },
   setAnswer: () => set((state) => ({ showAnswer: !state.showAnswer })),
+}));
+
+export const useForYouStore = create((set) => ({
+  forYou: {},
+  fetch: async () => {
+    const { data } = await getForYou();
+    set({ forYou: data });
+  },
 }));

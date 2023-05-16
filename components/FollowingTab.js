@@ -55,7 +55,7 @@ export default function FollowingTab({ data }) {
             marginTop: 20,
           }}
         >
-          <Text style={styles.title}>{data.flashcard_front}</Text>
+          <Text style={styles.title}>{data?.flashcard_front}</Text>
           <View style={styles.separator} />
           <Text style={{ color: green, fontWeight: 700 }}>Answer</Text>
           <Text
@@ -66,7 +66,7 @@ export default function FollowingTab({ data }) {
               marginTop: 5,
             }}
           >
-            {data.flashcard_back}
+            {data?.flashcard_back}
           </Text>
           <View style={{ marginTop: 40 }}>
             <Text style={{ color: grey, fontSize: 14 }}>
@@ -104,7 +104,7 @@ export default function FollowingTab({ data }) {
       ) : (
         <TouchableOpacity style={styles.content} onPress={setAnswer}>
           <View>
-            <Text style={styles.title}>{data.flashcard_front}</Text>
+            <Text style={styles.title}>{data?.flashcard_front}</Text>
           </View>
         </TouchableOpacity>
       )}

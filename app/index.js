@@ -4,7 +4,7 @@ import { dark3, grey2 } from "../utils/colors";
 import FollowingTab from "../components/FollowingTab";
 import ForYouTab from "../components/ForYouTab";
 import Constants from "expo-constants";
-import { useFollowingStore } from "../stores";
+import { useFollowingStore, useForYouStore } from "../stores";
 
 export default function App() {
   const Tabs = {
@@ -14,9 +14,12 @@ export default function App() {
   const [selectedTab, setSelectedTab] = useState(Tabs.FOLLOWING);
   const fetchFollowing = useFollowingStore((state) => state.fetch);
   const following = useFollowingStore((state) => state.following);
+  const fetchForYou = useForYouStore((state) => state.fetch);
+  const forYou = useForYouStore((state) => state.forYou);
 
   useEffect(() => {
     fetchFollowing();
+    fetchForYou();
   }, []);
 
   return (
@@ -50,7 +53,7 @@ export default function App() {
         {selectedTab === Tabs.FOLLOWING ? (
           <FollowingTab data={following} />
         ) : (
-          <ForYouTab />
+          <ForYouTab data={forYou} />
         )}
         <View style={styles.bottomDescription}>
           <Text style={{ color: "white", fontSize: 16 }}>

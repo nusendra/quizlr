@@ -9,3 +9,8 @@ export const getFollowing = async () => {
   const data = await axiosClient.get("/following");
   return data;
 };
+
+export const getForYou = async () => {
+  const data = await axiosClient.get("/for_you");
+  return data;
+};
