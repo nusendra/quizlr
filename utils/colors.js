@@ -1,0 +1,11 @@
+export const dark1 = "#001D28";
+export const dark2 = "#023D53";
+export const dark3 = "#1A5265";
+export const dark4 = "#011E29";
+export const green = "#2DC59F";
+export const green2 = "#16624F";
+export const green3 = "#1F8A70";
+export const grey = "#B2BFC4";
+export const orange = "#F17D23";
+export const orange1 = "#FBB668";
+export const yellow = "#FFD449";
