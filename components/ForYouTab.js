@@ -8,9 +8,19 @@ import {
 import { green4, green5, red } from "../utils/colors";
 import Constants from "expo-constants";
 import { useState } from "react";
+import { useForYouStore } from "../stores";
 
 export default function FollowingTab({ data, correctAnswer }) {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const showAnswer = useForYouStore((state) => state.showAnswer);
+  const setForYouAnswer = useForYouStore((state) => state.setAnswer);
+
+  const setAnswer = (answer) => {
+    if (showAnswer) {
+      setSelectedAnswer(answer);
+      setForYouAnswer();
+    }
+  };
 
   return (
     <>
@@ -23,7 +33,9 @@ export default function FollowingTab({ data, correctAnswer }) {
                 <TouchableOpacity
                   style={[
                     styles.selectOption,
-                    item.id === correctAnswer.id
+                    showAnswer
+                      ? { backgroundColor: green4 }
+                      : item.id === correctAnswer.id && selectedAnswer != null
                       ? { backgroundColor: green5 }
                       : selectedAnswer?.id === item.id &&
                         selectedAnswer?.id !== correctAnswer.id
@@ -31,7 +43,7 @@ export default function FollowingTab({ data, correctAnswer }) {
                       : {},
                   ]}
                   key={index}
-                  onPress={() => setSelectedAnswer(item)}
+                  onPress={() => setAnswer(item)}
                 >
                   <Text style={styles.textOption}>{item.answer}</Text>
                 </TouchableOpacity>

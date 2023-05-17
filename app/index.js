@@ -4,19 +4,27 @@ import { dark3, grey2 } from "../utils/colors";
 import FollowingTab from "../components/FollowingTab";
 import ForYouTab from "../components/ForYouTab";
 import Constants from "expo-constants";
-import { useFollowingStore, useForYouStore } from "../stores";
+import { useFollowingStore, useForYouStore, useTabStore } from "../stores";
+import { tabOptions } from "../utils/constants";
 
 export default function App() {
-  const Tabs = {
-    FOLLOWING: "Following",
-    FOR_YOU: "For You",
-  };
-  const [selectedTab, setSelectedTab] = useState(Tabs.FOLLOWING);
+  const Tabs = tabOptions;
+
   const fetchFollowing = useFollowingStore((state) => state.fetch);
   const following = useFollowingStore((state) => state.following);
   const fetchForYou = useForYouStore((state) => state.fetch);
   const forYou = useForYouStore((state) => state.forYou);
   const correctAnswer = useForYouStore((state) => state.correctAnswer);
+  const activeTab = useTabStore((state) => state.activeTab);
+  const setActiveTab = useTabStore((state) => state.setActiveTab);
+  const resetFollowingAnswer = useFollowingStore((state) => state.resetAnswer);
+  const resetForYouAnswer = useForYouStore((state) => state.resetAnswer);
+
+  const setTab = (tab) => {
+    setActiveTab(tab);
+    resetFollowingAnswer();
+    resetForYouAnswer();
+  };
 
   useEffect(() => {
     fetchFollowing();
@@ -33,25 +41,23 @@ export default function App() {
           </View>
           <TouchableOpacity
             style={styles.tabItems}
-            onPress={() => setSelectedTab(Tabs.FOLLOWING)}
+            onPress={() => setTab(Tabs.FOLLOWING)}
           >
             <Text style={styles.tabText}>{Tabs.FOLLOWING}</Text>
-            {selectedTab === Tabs.FOLLOWING && (
-              <View style={styles.bottomLine} />
-            )}
+            {activeTab === Tabs.FOLLOWING && <View style={styles.bottomLine} />}
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.tabItems}
-            onPress={() => setSelectedTab(Tabs.FOR_YOU)}
+            onPress={() => setTab(Tabs.FOR_YOU)}
           >
             <Text style={styles.tabText}>{Tabs.FOR_YOU}</Text>
-            {selectedTab === Tabs.FOR_YOU && <View style={styles.bottomLine} />}
+            {activeTab === Tabs.FOR_YOU && <View style={styles.bottomLine} />}
           </TouchableOpacity>
           <TouchableOpacity style={styles.searchButton}>
             <Image source={require("../assets/images/search.png")} />
           </TouchableOpacity>
         </View>
-        {selectedTab === Tabs.FOLLOWING ? (
+        {activeTab === Tabs.FOLLOWING ? (
           <FollowingTab data={following} />
         ) : (
           <ForYouTab

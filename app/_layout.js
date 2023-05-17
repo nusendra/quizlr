@@ -3,17 +3,28 @@ import { Slot } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { dark1, dark2, dark4 } from "../utils/colors";
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
-import { useFollowingStore } from "../stores";
+import { useFollowingStore, useForYouStore, useTabStore } from "../stores";
 import { shallow } from "zustand/shallow";
+import { tabOptions } from "../utils/constants";
 
 export default function App() {
-  const { following, setAnswer } = useFollowingStore(
+  const { following, setAnswer: setFollowingAnswer } = useFollowingStore(
     (state) => ({
       following: state.following,
       setAnswer: state.setAnswer,
     }),
     shallow
   );
+  const activeTab = useTabStore((state) => state.activeTab);
+  const setForYouAnswer = useForYouStore((state) => state.setAnswer);
+
+  const flip = () => {
+    if (activeTab === tabOptions.FOLLOWING) {
+      setFollowingAnswer();
+    } else if (activeTab === tabOptions.FOR_YOU) {
+      setForYouAnswer();
+    }
+  };
 
   return (
     <>
@@ -70,7 +81,7 @@ export default function App() {
             <Image source={require("../assets/images/Bookmark-white.png")} />
             <Text style={styles.textRightButton}>203</Text>
           </View>
-          <TouchableOpacity style={styles.rightButtonItem} onPress={setAnswer}>
+          <TouchableOpacity style={styles.rightButtonItem} onPress={flip}>
             <Image source={require("../assets/images/Flip.png")} />
             <Text style={styles.textRightButton}>Flip</Text>
           </TouchableOpacity>

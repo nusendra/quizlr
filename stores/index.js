@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { getFollowing, getForYou, getAnswer } from "../api";
+import { tabOptions } from "../utils/constants";
 
 export const useFollowingStore = create((set) => ({
   following: {},
@@ -9,10 +10,13 @@ export const useFollowingStore = create((set) => ({
     set({ following: data });
   },
   setAnswer: () => set((state) => ({ showAnswer: !state.showAnswer })),
+  resetAnswer: () => set({ showAnswer: false }),
 }));
 
 export const useForYouStore = create((set) => ({
   forYou: {},
+  showAnswer: false,
+  setAnswer: () => set((state) => ({ showAnswer: !state.showAnswer })),
   correctAnswer: {},
   fetch: async () => {
     const { data } = await getForYou();
@@ -21,4 +25,10 @@ export const useForYouStore = create((set) => ({
     set({ forYou: data });
     set({ correctAnswer });
   },
+  resetAnswer: () => set({ showAnswer: true }),
+}));
+
+export const useTabStore = create((set) => ({
+  activeTab: tabOptions.FOLLOWING,
+  setActiveTab: (tab) => set({ activeTab: tab }),
 }));
