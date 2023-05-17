@@ -20,9 +20,7 @@ export const useForYouStore = create((set) => ({
   correctAnswer: {},
   fetch: async () => {
     const data = await getForYou();
-    console.log("for you", data);
     const correctAnswer = await getAnswer(data.id);
-    console.log("for you", correctAnswer);
 
     set({ forYou: data });
     set({ correctAnswer });
