@@ -5,10 +5,13 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { green4 } from "../utils/colors";
+import { green4, green5, red } from "../utils/colors";
 import Constants from "expo-constants";
+import { useState } from "react";
 
-export default function FollowingTab({ data }) {
+export default function FollowingTab({ data, correctAnswer }) {
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+
   return (
     <>
       <View style={styles.content}>
@@ -17,7 +20,19 @@ export default function FollowingTab({ data }) {
           <View style={{ marginTop: 40, marginTop: 130 }}>
             {data.options.map((item, index) => {
               return (
-                <TouchableOpacity style={styles.selectOption} key={index}>
+                <TouchableOpacity
+                  style={[
+                    styles.selectOption,
+                    item.id === correctAnswer.id
+                      ? { backgroundColor: green5 }
+                      : selectedAnswer?.id === item.id &&
+                        selectedAnswer?.id !== correctAnswer.id
+                      ? { backgroundColor: red }
+                      : {},
+                  ]}
+                  key={index}
+                  onPress={() => setSelectedAnswer(item)}
+                >
                   <Text style={styles.textOption}>{item.answer}</Text>
                 </TouchableOpacity>
               );

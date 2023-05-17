@@ -14,3 +14,8 @@ export const getForYou = async () => {
   const data = await axiosClient.get("/for_you");
   return data;
 };
+
+export const getAnswer = async (id) => {
+  const data = await axiosClient.get(`/reveal?id=${id}`);
+  return data;
+};

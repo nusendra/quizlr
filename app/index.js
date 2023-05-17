@@ -16,6 +16,7 @@ export default function App() {
   const following = useFollowingStore((state) => state.following);
   const fetchForYou = useForYouStore((state) => state.fetch);
   const forYou = useForYouStore((state) => state.forYou);
+  const correctAnswer = useForYouStore((state) => state.correctAnswer);
 
   useEffect(() => {
     fetchFollowing();
@@ -53,7 +54,10 @@ export default function App() {
         {selectedTab === Tabs.FOLLOWING ? (
           <FollowingTab data={following} />
         ) : (
-          <ForYouTab data={forYou} />
+          <ForYouTab
+            data={forYou}
+            correctAnswer={correctAnswer?.correct_options[0]}
+          />
         )}
         <View style={styles.bottomDescription}>
           <Text style={{ color: "white", fontSize: 16 }}>
