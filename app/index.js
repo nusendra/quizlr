@@ -79,7 +79,7 @@ export default function App() {
               source={require("../assets/images/play.png")}
               style={styles.play}
             />
-            <Text style={styles.footerText}>{following.playlist}</Text>
+            <Text style={styles.footerText}>{following?.playlist}</Text>
           </View>
           <Image
             source={require("../assets/images/arrow-right.png")}

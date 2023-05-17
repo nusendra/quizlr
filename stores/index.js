@@ -6,7 +6,7 @@ export const useFollowingStore = create((set) => ({
   following: {},
   showAnswer: false,
   fetch: async () => {
-    const { data } = await getFollowing();
+    const data = await getFollowing();
     set({ following: data });
   },
   setAnswer: () => set((state) => ({ showAnswer: !state.showAnswer })),
@@ -19,8 +19,10 @@ export const useForYouStore = create((set) => ({
   setAnswer: () => set((state) => ({ showAnswer: !state.showAnswer })),
   correctAnswer: {},
   fetch: async () => {
-    const { data } = await getForYou();
-    const { data: correctAnswer } = await getAnswer(data.id);
+    const data = await getForYou();
+    console.log("for you", data);
+    const correctAnswer = await getAnswer(data.id);
+    console.log("for you", correctAnswer);
 
     set({ forYou: data });
     set({ correctAnswer });
