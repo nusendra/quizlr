@@ -1,21 +1,22 @@
-import axios from "axios";
 import { API_URL } from "@env";
 
-const axiosClient = axios.create();
-
-axiosClient.defaults.baseURL = API_URL;
-
 export const getFollowing = async () => {
-  const data = await axiosClient.get("/following");
+  const response = await fetch(`${API_URL}/following`);
+  const data = await response.json();
+
   return data;
 };
 
 export const getForYou = async () => {
-  const data = await axiosClient.get("/for_you");
+  const response = await fetch(`${API_URL}/for_you`);
+  const data = await response.json();
+
   return data;
 };
 
 export const getAnswer = async (id) => {
-  const data = await axiosClient.get(`/reveal?id=${id}`);
+  const response = await fetch(`${API_URL}/reveal?id=${id}`);
+  const data = await response.json();
+
   return data;
 };
