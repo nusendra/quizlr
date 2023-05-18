@@ -70,7 +70,6 @@ export default function App() {
         )}
         <View style={styles.bottomDescription}>
           <Text style={{ color: "white", fontSize: 16 }}>
-            {following.length}
             {following[followingActiveItemIndex]?.user.name}
           </Text>
           <Text numberOfLines={1} style={{ color: "white", fontSize: 12 }}>
