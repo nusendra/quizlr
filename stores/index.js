@@ -2,15 +2,23 @@ import { create } from "zustand";
 import { getFollowing, getForYou, getAnswer } from "../api";
 import { tabOptions } from "../utils/constants";
 
-export const useFollowingStore = create((set) => ({
-  following: {},
+export const useFollowingStore = create((set, get) => ({
+  following: [],
   showAnswer: false,
+  activeItemIndex: 0,
   fetch: async () => {
     const data = await getFollowing();
-    set({ following: data });
+    set((state) => ({ following: [...state.following, data] }));
+
+    // get more data for initial load
+    if (get().following.length < 2) {
+      const data2 = await getFollowing();
+      set((state) => ({ following: [...state.following, data2] }));
+    }
   },
   setAnswer: () => set((state) => ({ showAnswer: !state.showAnswer })),
   resetAnswer: () => set({ showAnswer: false }),
+  setActiveIndex: (index) => set({ activeItemIndex: index }),
 }));
 
 export const useForYouStore = create((set) => ({

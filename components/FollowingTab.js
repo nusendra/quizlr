@@ -4,7 +4,9 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  FlatList,
 } from "react-native";
+import { useState, useRef, useEffect, memo } from "react";
 import {
   green,
   green2,
@@ -17,11 +19,27 @@ import {
 import { useFollowingStore } from "../stores";
 import { shallow } from "zustand/shallow";
 
-export default function FollowingTab({ data }) {
-  const { showAnswer, setAnswer } = useFollowingStore(
-    (state) => ({ showAnswer: state.showAnswer, setAnswer: state.setAnswer }),
+const FollowingTab = () => {
+  const {
+    showAnswer,
+    setAnswer,
+    following,
+    fetch,
+    setActiveIndex,
+    activeItemIndex,
+  } = useFollowingStore(
+    (state) => ({
+      showAnswer: state.showAnswer,
+      setAnswer: state.setAnswer,
+      following: state.following,
+      fetch: state.fetch,
+      setActiveIndex: state.setActiveIndex,
+      activeItemIndex: state.activeItemIndex,
+    }),
     shallow
   );
+  const [contentHeight, setContentHeight] = useState(0);
+  const flatList = useRef();
 
   const options = [
     {
@@ -45,6 +63,23 @@ export default function FollowingTab({ data }) {
       value: 5,
     },
   ];
+
+  const fetchMore = () => {
+    fetch();
+  };
+
+  const onViewableItemsChanged = ({ viewableItems }) => {
+    try {
+      setActiveIndex(viewableItems[0]?.index);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const viewabilityConfig = { itemVisiblePercentThreshold: 5 };
+
+  const viewabilityConfigCallbackPairs = useRef([{ onViewableItemsChanged }]);
+
   return (
     <>
       {showAnswer ? (
@@ -55,7 +90,9 @@ export default function FollowingTab({ data }) {
             marginTop: 20,
           }}
         >
-          <Text style={styles.title}>{data?.flashcard_front}</Text>
+          <Text style={styles.title}>
+            {following[activeItemIndex]?.flashcard_front}
+          </Text>
           <View style={styles.separator} />
           <Text style={{ color: green, fontWeight: 700 }}>Answer</Text>
           <Text
@@ -66,7 +103,7 @@ export default function FollowingTab({ data }) {
               marginTop: 5,
             }}
           >
-            {data?.flashcard_back}
+            {following[activeItemIndex]?.flashcard_back}
           </Text>
           <View style={{ marginTop: 40 }}>
             <Text style={{ color: grey, fontSize: 14 }}>
@@ -102,15 +139,56 @@ export default function FollowingTab({ data }) {
           </View>
         </ScrollView>
       ) : (
-        <TouchableOpacity style={styles.content} onPress={setAnswer}>
-          <View>
-            <Text style={styles.title}>{data?.flashcard_front}</Text>
-          </View>
-        </TouchableOpacity>
+        <View
+          style={styles.content}
+          onLayout={(event) => {
+            const { height } = event.nativeEvent.layout;
+            setContentHeight(height);
+          }}
+        >
+          <FlatList
+            ref={flatList}
+            contentContainerStyle={{
+              alignSelf: "center",
+              flexDirection: "column",
+            }}
+            data={following}
+            onEndReached={fetchMore}
+            onEndReachedThreshold={0.1}
+            renderItem={({ item, index }) => (
+              <View
+                style={{
+                  height: contentHeight,
+                  justifyContent: "center",
+                }}
+              >
+                <Text style={{ color: "white", fontSize: 30 }}>
+                  {item?.flashcard_front}
+                </Text>
+              </View>
+            )}
+            pagingEnabled
+            centerContent={true}
+            contentInsetAdjustmentBehavior="automatic"
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+            viewabilityConfigCallbackPairs={
+              viewabilityConfigCallbackPairs.current
+            }
+            onScrollToIndexFailed={(info) => {
+              console.log("aw");
+              flatList.current?.scrollToIndex({
+                index: info.index,
+                animated: true,
+              });
+            }}
+            // onContentSizeChange={handleScrollToEnd}
+          />
+        </View>
       )}
     </>
   );
-}
+};
 
 const styles = StyleSheet.create({
   content: {
@@ -141,3 +219,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+
+export default memo(FollowingTab);

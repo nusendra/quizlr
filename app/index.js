@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { dark3, grey2 } from "../utils/colors";
 import FollowingTab from "../components/FollowingTab";
@@ -12,6 +12,9 @@ export default function App() {
 
   const fetchFollowing = useFollowingStore((state) => state.fetch);
   const following = useFollowingStore((state) => state.following);
+  const followingActiveItemIndex = useFollowingStore(
+    (state) => state.activeItemIndex
+  );
   const fetchForYou = useForYouStore((state) => state.fetch);
   const forYou = useForYouStore((state) => state.forYou);
   const correctAnswer = useForYouStore((state) => state.correctAnswer);
@@ -58,7 +61,7 @@ export default function App() {
           </TouchableOpacity>
         </View>
         {activeTab === Tabs.FOLLOWING ? (
-          <FollowingTab data={following} />
+          <FollowingTab />
         ) : (
           <ForYouTab
             data={forYou}
@@ -67,10 +70,11 @@ export default function App() {
         )}
         <View style={styles.bottomDescription}>
           <Text style={{ color: "white", fontSize: 16 }}>
-            {following?.user?.name}
+            {following.length}
+            {following[followingActiveItemIndex]?.user.name}
           </Text>
-          <Text style={{ color: "white", fontSize: 14 }}>
-            {following?.description}
+          <Text numberOfLines={1} style={{ color: "white", fontSize: 12 }}>
+            {following[followingActiveItemIndex]?.description}
           </Text>
         </View>
         <View style={styles.footer}>
@@ -79,7 +83,9 @@ export default function App() {
               source={require("../assets/images/play.png")}
               style={styles.play}
             />
-            <Text style={styles.footerText}>{following?.playlist}</Text>
+            <Text style={styles.footerText}>
+              {following[followingActiveItemIndex]?.playlist}
+            </Text>
           </View>
           <Image
             source={require("../assets/images/arrow-right.png")}
