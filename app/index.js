@@ -1,14 +1,26 @@
-import { useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  AppState,
+} from "react-native";
 import { dark3, grey2 } from "../utils/colors";
 import FollowingTab from "../components/FollowingTab";
 import ForYouTab from "../components/ForYouTab";
 import Constants from "expo-constants";
 import { useFollowingStore, useForYouStore, useTabStore } from "../stores";
 import { tabOptions } from "../utils/constants";
+import { useTimer } from "../providers/TimerContext";
+import { toMinutes } from "../utils/humanize";
 
 export default function App() {
   const Tabs = tabOptions;
+  const { timer } = useTimer();
+  const intervalRef = useRef(null);
+  const [screenTime, setScreenTime] = useState(0);
 
   const fetchFollowing = useFollowingStore((state) => state.fetch);
   const following = useFollowingStore((state) => state.following);
@@ -32,7 +44,35 @@ export default function App() {
   useEffect(() => {
     fetchFollowing();
     fetchForYou();
+
+    timer.start();
+
+    const listener = AppState.addEventListener("change", handleAppStateChange);
+
+    intervalRef.current = setInterval(() => {
+      timer.pause();
+      timer.resume();
+
+      setScreenTime(timer.totalTime);
+    }, 180000);
+
+    return () => {
+      listener.remove();
+      clearInterval(intervalRef.current);
+    };
   }, []);
+
+  const handleAppStateChange = (state) => {
+    switch (state) {
+      case "active":
+        timer.resume();
+        setScreenTime(timer.totalTime);
+        break;
+      default: //inactive or background
+        timer.pause();
+        break;
+    }
+  };
 
   return (
     <>
@@ -40,11 +80,16 @@ export default function App() {
         <View style={styles.tabs}>
           <View style={styles.readingTime}>
             <Image source={require("../assets/images/timer.png")} />
-            <Text style={{ color: grey2, marginLeft: 4 }}>10m</Text>
+            <Text style={{ color: grey2, marginLeft: 4 }}>
+              {toMinutes(screenTime)}m
+            </Text>
           </View>
           <TouchableOpacity
             style={styles.tabItems}
-            onPress={() => setTab(Tabs.FOLLOWING)}
+            onPress={() => {
+              timer.pause();
+              timer.resume();
+            }}
           >
             <Text style={styles.tabText}>{Tabs.FOLLOWING}</Text>
             {activeTab === Tabs.FOLLOWING && <View style={styles.bottomLine} />}

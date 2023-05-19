@@ -6,6 +6,7 @@ import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import { useFollowingStore, useForYouStore, useTabStore } from "../stores";
 import { shallow } from "zustand/shallow";
 import { tabOptions } from "../utils/constants";
+import TimerContextProvider from "../providers/TimerContext";
 
 export default function App() {
   const { following, setAnswer: setFollowingAnswer } = useFollowingStore(
@@ -29,64 +30,66 @@ export default function App() {
   return (
     <>
       <StatusBar style="light" />
-      <LinearGradient
-        colors={[dark1, dark2]}
-        style={{
-          flex: 1,
-        }}
-      >
-        <Slot />
-        <View style={styles.footer}>
-          <View style={styles.footerItem}>
-            <Image source={require("../assets/images/home.png")} />
-            <Text style={styles.bottomText}>Home</Text>
+      <TimerContextProvider>
+        <LinearGradient
+          colors={[dark1, dark2]}
+          style={{
+            flex: 1,
+          }}
+        >
+          <Slot />
+          <View style={styles.footer}>
+            <View style={styles.footerItem}>
+              <Image source={require("../assets/images/home.png")} />
+              <Text style={styles.bottomText}>Home</Text>
+            </View>
+            <View style={styles.footerItem}>
+              <Image source={require("../assets/images/compas.png")} />
+              <Text style={styles.bottomText}>Leaderboard</Text>
+            </View>
+            <View style={styles.footerItem}>
+              <Image source={require("../assets/images/timer.png")} />
+              <Text style={styles.bottomText}>Activity</Text>
+            </View>
+            <View style={styles.footerItem}>
+              <Image source={require("../assets/images/bookmark.png")} />
+              <Text style={styles.bottomText}>Bookmarks</Text>
+            </View>
+            <View style={styles.footerItem}>
+              <Image source={require("../assets/images/profile.png")} />
+              <Text style={styles.bottomText}>Profile</Text>
+            </View>
           </View>
-          <View style={styles.footerItem}>
-            <Image source={require("../assets/images/compas.png")} />
-            <Text style={styles.bottomText}>Leaderboard</Text>
+          <View style={styles.rightButton}>
+            <View style={[styles.rightButtonItem, { marginBottom: 10 }]}>
+              <Image
+                source={{ uri: following?.user?.avatar }}
+                style={{ height: 45, width: 45 }}
+              />
+            </View>
+            <View style={styles.rightButtonItem}>
+              <Image source={require("../assets/images/Like.png")} />
+              <Text style={styles.textRightButton}>87</Text>
+            </View>
+            <View style={styles.rightButtonItem}>
+              <Image source={require("../assets/images/Comments.png")} />
+              <Text style={styles.textRightButton}>2</Text>
+            </View>
+            <View style={styles.rightButtonItem}>
+              <Image source={require("../assets/images/Share.png")} />
+              <Text style={styles.textRightButton}>17</Text>
+            </View>
+            <View style={styles.rightButtonItem}>
+              <Image source={require("../assets/images/Bookmark-white.png")} />
+              <Text style={styles.textRightButton}>203</Text>
+            </View>
+            <TouchableOpacity style={styles.rightButtonItem} onPress={flip}>
+              <Image source={require("../assets/images/Flip.png")} />
+              <Text style={styles.textRightButton}>Flip</Text>
+            </TouchableOpacity>
           </View>
-          <View style={styles.footerItem}>
-            <Image source={require("../assets/images/timer.png")} />
-            <Text style={styles.bottomText}>Activity</Text>
-          </View>
-          <View style={styles.footerItem}>
-            <Image source={require("../assets/images/bookmark.png")} />
-            <Text style={styles.bottomText}>Bookmarks</Text>
-          </View>
-          <View style={styles.footerItem}>
-            <Image source={require("../assets/images/profile.png")} />
-            <Text style={styles.bottomText}>Profile</Text>
-          </View>
-        </View>
-        <View style={styles.rightButton}>
-          <View style={[styles.rightButtonItem, { marginBottom: 10 }]}>
-            <Image
-              source={{ uri: following?.user?.avatar }}
-              style={{ height: 45, width: 45 }}
-            />
-          </View>
-          <View style={styles.rightButtonItem}>
-            <Image source={require("../assets/images/Like.png")} />
-            <Text style={styles.textRightButton}>87</Text>
-          </View>
-          <View style={styles.rightButtonItem}>
-            <Image source={require("../assets/images/Comments.png")} />
-            <Text style={styles.textRightButton}>2</Text>
-          </View>
-          <View style={styles.rightButtonItem}>
-            <Image source={require("../assets/images/Share.png")} />
-            <Text style={styles.textRightButton}>17</Text>
-          </View>
-          <View style={styles.rightButtonItem}>
-            <Image source={require("../assets/images/Bookmark-white.png")} />
-            <Text style={styles.textRightButton}>203</Text>
-          </View>
-          <TouchableOpacity style={styles.rightButtonItem} onPress={flip}>
-            <Image source={require("../assets/images/Flip.png")} />
-            <Text style={styles.textRightButton}>Flip</Text>
-          </TouchableOpacity>
-        </View>
-      </LinearGradient>
+        </LinearGradient>
+      </TimerContextProvider>
     </>
   );
 }
