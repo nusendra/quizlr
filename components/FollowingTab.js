@@ -76,65 +76,49 @@ const FollowingTab = () => {
     }
   };
 
-  const viewabilityConfig = { itemVisiblePercentThreshold: 5 };
+  const OptionItem = ({ color, value }) => {
+    return (
+      <View
+        style={[
+          styles.numberOptions,
+          {
+            backgroundColor: color,
+          },
+        ]}
+      >
+        <Text style={{ color: "white", fontSize: 20 }}>{value}</Text>
+      </View>
+    );
+  };
 
   const viewabilityConfigCallbackPairs = useRef([{ onViewableItemsChanged }]);
+
+  const itemLayout = (data, index) => ({
+    index,
+    length: contentHeight,
+    offset: contentHeight * index,
+  });
 
   return (
     <>
       {showAnswer ? (
-        <ScrollView
-          style={{
-            marginRight: 73,
-            marginLeft: 16,
-            marginTop: 20,
-          }}
-        >
+        <ScrollView style={styles.scrollView}>
           <Text style={styles.title}>
             {following[activeItemIndex]?.flashcard_front}
           </Text>
           <View style={styles.separator} />
           <Text style={{ color: green, fontWeight: 700 }}>Answer</Text>
-          <Text
-            style={{
-              color: grey,
-              fontWeight: 400,
-              fontSize: 20,
-              marginTop: 5,
-            }}
-          >
+          <Text style={styles.answerTitle}>
             {following[activeItemIndex]?.flashcard_back}
           </Text>
           <View style={{ marginTop: 40 }}>
             <Text style={{ color: grey, fontSize: 14 }}>
               How well did you know this?
             </Text>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "flex-start",
-                marginTop: 5,
-              }}
-            >
-              {options.map((item, index) => {
-                return (
-                  <View
-                    key={index}
-                    style={[
-                      styles.numberOptions,
-                      {
-                        backgroundColor: item.color,
-                      },
-                    ]}
-                  >
-                    <Text style={{ color: "white", fontSize: 20 }}>
-                      {item.value}
-                    </Text>
-                  </View>
-                );
-              })}
+            <View style={styles.optionContainer}>
+              {options.map((item, index) => (
+                <OptionItem key={index} color={item.color} value={item.value} />
+              ))}
             </View>
           </View>
         </ScrollView>
@@ -175,14 +159,9 @@ const FollowingTab = () => {
             viewabilityConfigCallbackPairs={
               viewabilityConfigCallbackPairs.current
             }
-            onScrollToIndexFailed={(info) => {
-              console.log("aw");
-              flatList.current?.scrollToIndex({
-                index: info.index,
-                animated: true,
-              });
-            }}
-            // onContentSizeChange={handleScrollToEnd}
+            keyExtractor={(item, index) => String(index)}
+            initialScrollIndex={activeItemIndex}
+            getItemLayout={itemLayout}
           />
         </View>
       )}
@@ -217,6 +196,24 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: "center",
     alignItems: "center",
+  },
+  scrollView: {
+    marginRight: 73,
+    marginLeft: 16,
+    marginTop: 20,
+  },
+  answerTitle: {
+    color: grey,
+    fontWeight: 400,
+    fontSize: 20,
+    marginTop: 5,
+  },
+  optionContainer: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginTop: 5,
   },
 });
 
